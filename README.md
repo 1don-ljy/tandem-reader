@@ -6,6 +6,8 @@
 
 A Manifest V3 browser extension that keeps your own model endpoint and API key, renders translations next to the original technical documentation, and remembers terminology and domain context so the same term stays consistent across a documentation set.
 
+> **只想装上用、不改代码？** 到 [Releases](https://github.com/1don-ljy/tandem-reader/releases/latest) 下载 `tandem-reader-<version>.zip`，解压后加载其中的 `extension` 文件夹即可。仓库里**只有源码，不含构建产物**（可加载的 `extension/` 由 `npm run build` 生成），具体要求见下方「安装」。
+
 ## 特性
 
 - **就地对照**：译文叠加在原文段落之后，原文永不删除；`原文 / 双语 / 译文` 三种显示模式随时切换，切换不会重新调用模型。
@@ -18,12 +20,29 @@ A Manifest V3 browser extension that keeps your own model endpoint and API key, 
 
 ## 安装
 
-1. 打开 Chrome 的 `chrome://extensions` 或 Edge 的 `edge://extensions`。
-2. 开启「开发者模式」，点击「加载已解压的扩展程序」。
-3. 选择本项目的 **`extension` 文件夹**，不是项目根目录。
-4. 将扩展固定到浏览器工具栏，打开扩展设置，添加模型连接。
+可加载的 **`extension/` 目录不在仓库里**：它是构建产物，已写入 `.gitignore`（构建产物进版本库会随源码变旧，更容易误导）。所以先选一条路：
 
-本地 ZIP 包已包含可加载的 `extension`；从源码开始时，请先按照下方开发说明安装依赖并构建。修改源码后重新构建，在扩展管理页点击刷新，再刷新要翻译的网页。本项目是本地开发版本，尚未提交浏览器扩展商店。
+### 方式一：直接使用（不需要 Node.js）
+
+1. 打开 [Releases](https://github.com/1don-ljy/tandem-reader/releases/latest)，下载 `tandem-reader-<version>.zip`
+2. 解压到任意目录，例如 `D:\tandem-reader`
+3. 打开 Chrome 的 `chrome://extensions` 或 Edge 的 `edge://extensions`
+4. 开启右上角「开发者模式」，点击「加载已解压的扩展程序」
+5. 选择解压目录里的 **`extension` 文件夹**，不是外层目录
+6. 把扩展固定到工具栏，打开扩展设置添加模型连接（见下方「模型配置」）
+
+### 方式二：从源码构建（需要 Node.js 22.19 或更新版本）
+
+```sh
+git clone https://github.com/1don-ljy/tandem-reader.git
+cd tandem-reader
+npm ci
+npm run build      # 这一步才会生成 extension/
+```
+
+然后按方式一的第 3–6 步，加载项目根目录下的 `extension` 文件夹。改完代码重新 `npm run build`（或先开着 `npm run build:watch`），在扩展管理页点「刷新」，再刷新要翻译的网页；细节见「开发与构建」。
+
+两条路的区别：方式一拿到的是发布版本，方式二拿到的是当前源码；如果 Releases 里的最新版本落后于 `main`（例如刚合入的功能还没发版），想要最新代码就走方式二，或自己执行 `npm run package` 打包。本项目是本地开发版本，尚未提交浏览器扩展商店。
 
 ## 模型配置
 
@@ -150,7 +169,7 @@ npm test
 npm run package
 ```
 
-`npm test` 直接用 Node 的类型剥离运行 `src/**` 的单元测试，不需要先构建。`npm run build` 执行严格 TypeScript 检查并生成扩展产物（不生成 sourcemap），`npm run build:watch` 在开发时监听源码并持续重建（生成 sourcemap，仅供本地调试）。`npm run package` 在 `dist` 中生成 `tandem-reader-<version>.zip`（当前 `0.5.0`）；打包前会校验 manifest 版本与 `package.json` 一致，且产物中不含 sourcemap 或测试文件。编译后的 JavaScript 是浏览器需要加载的产物；修改业务逻辑时应编辑 TypeScript 源文件。
+`npm test` 直接用 Node 的类型剥离运行 `src/**` 的单元测试，不需要先构建。`npm run build` 执行严格 TypeScript 检查并生成扩展产物（不生成 sourcemap），`npm run build:watch` 在开发时监听源码并持续重建（生成 sourcemap，仅供本地调试）。`npm run package` 在 `dist` 中生成 `tandem-reader-<version>.zip`（当前 `0.5.1`）；打包前会校验 manifest 版本与 `package.json` 一致，且产物中不含 sourcemap 或测试文件。编译后的 JavaScript 是浏览器需要加载的产物；修改业务逻辑时应编辑 TypeScript 源文件。
 
 | 目录 | 用途 |
 | --- | --- |
@@ -159,7 +178,7 @@ npm run package
 | `src/shared` | 消息类型、服务商预设、术语匹配、占位符与配置校验。 |
 | `src/background`、`src/content`、`src/ui` | 扩展后台、网页阅读交互与配置界面。 |
 | `public` | Manifest、扩展图标、HTML 与 CSS 静态资源（`manifest.json` 的版本号是 `__VERSION__` 占位符，构建时注入）。 |
-| `extension` | 构建生成的可加载扩展，不作为业务源码编辑。 |
+| `extension` | 构建生成的可加载扩展（**仓库中不存在**，由 `npm run build` 生成），不作为业务源码编辑。 |
 | `tests` | Node 单元测试（直接运行 `src/**`）、`tests/browser` 隔离浏览器测试、fixtures 与截图产物。 |
 | `scripts` | `build.mjs`（生产 / `--watch` 构建与版本注入）、`package.mjs`（打包预检与 ZIP）。 |
 | `docs` | 设计与重构文档（历史提案，含更名说明）。 |
@@ -192,9 +211,9 @@ npm run package    # 再生成 dist/tandem-reader-<version>.zip（含 extension/
 发布一个带可加载 ZIP 的 GitHub Release：
 
 ```sh
-git tag -a v0.5.0 -m "Tandem Reader 0.5.0"
+git tag -a v0.5.1 -m "Tandem Reader 0.5.1"
 git push origin main --tags
-# 再在 GitHub 网页上 New release → 选择 v0.5.0 → 上传 dist/tandem-reader-0.5.0.zip → 填写更新说明（可用 CHANGELOG.md 的 0.5.0 一节）
+# 再在 GitHub 网页上 New release → 选择 v0.5.1 → 上传 dist/tandem-reader-0.5.1.zip → 填写更新说明（可用 CHANGELOG.md 的 0.5.1 一节）
 ```
 
 扩展已带图标（`public/icon-{16,32,48,128}.png`，几何占位设计，可按品牌替换）。提交浏览器扩展商店前还需要：商店文案与截图、隐私政策页；当前仓库以本地开发版本发布，尚未提交商店。

@@ -4,6 +4,8 @@
 
 ## Unreleased
 
+- 文档：「安装」拆成「方式一：直接使用（下载 Release 的 ZIP）」与「方式二：从源码构建」两条路，并明确说明仓库里**不含**可加载的 `extension/`（构建产物，由 `npm run build` 生成），避免 clone 后找不到目录。
+
 - 修复浏览器冒烟测试 harness 的两个缺陷：fixture 以 Buffer 读入后被当成对象序列化成 JSON（导致 `/docs/observability.html` 与 `/docs/json-output.html` 返回的不是 HTML），以及 Service Worker 重启时复用了已 `detach()` 的 CDP session。24 个浏览器场景现已在本地全部通过。仅测试代码改动，扩展产物不变。
 
 ## 0.5.1
