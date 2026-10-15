@@ -220,6 +220,8 @@ git push origin main --tags
 
 仓库自带两个 GitHub Actions：`.github/workflows/ci.yml` 在 push / PR 时执行类型检查、单元测试与生产构建；`.github/workflows/browser.yml` 在 push 到 `main`、手动（Actions → Run workflow）或每周自动运行浏览器冒烟测试，会自动安装 Playwright、构建扩展并上传 `tests/artifacts` 截图。
 
+仓库 Settings → Social preview 使用的分享卡片图是 `docs/social-preview.png`（1280×630，真实图标 + 示意界面与示例内容，可随时换成真实截图）。
+
 各版本变更见 [CHANGELOG.md](CHANGELOG.md)。
 
 ## 许可证
