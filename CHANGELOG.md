@@ -2,6 +2,10 @@
 
 本项目自 `0.5.0` 起在此记录。更早的 `0.1.0`–`0.4.0` 只有本地 ZIP，没有条目化记录。
 
+## Unreleased
+
+- 修复浏览器冒烟测试 harness 的两个缺陷：fixture 以 Buffer 读入后被当成对象序列化成 JSON（导致 `/docs/observability.html` 与 `/docs/json-output.html` 返回的不是 HTML），以及 Service Worker 重启时复用了已 `detach()` 的 CDP session。24 个浏览器场景现已在本地全部通过。仅测试代码改动，扩展产物不变。
+
 ## 0.5.1
 
 - 新增扩展图标（16 / 32 / 48 / 128），工具栏与扩展管理页不再显示默认图标；图标为几何占位设计，可按品牌替换。

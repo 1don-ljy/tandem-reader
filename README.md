@@ -199,7 +199,7 @@ git push origin main --tags
 
 扩展已带图标（`public/icon-{16,32,48,128}.png`，几何占位设计，可按品牌替换）。提交浏览器扩展商店前还需要：商店文案与截图、隐私政策页；当前仓库以本地开发版本发布，尚未提交商店。
 
-仓库自带两个 GitHub Actions：`.github/workflows/ci.yml` 在 push / PR 时执行类型检查、单元测试与生产构建；`.github/workflows/browser.yml` 可手动（Actions → Run workflow）或每周自动运行浏览器冒烟测试，会自动安装 Playwright、构建扩展并上传 `tests/artifacts` 截图。
+仓库自带两个 GitHub Actions：`.github/workflows/ci.yml` 在 push / PR 时执行类型检查、单元测试与生产构建；`.github/workflows/browser.yml` 在 push 到 `main`、手动（Actions → Run workflow）或每周自动运行浏览器冒烟测试，会自动安装 Playwright、构建扩展并上传 `tests/artifacts` 截图。
 
 各版本变更见 [CHANGELOG.md](CHANGELOG.md)。
 

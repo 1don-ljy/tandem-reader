@@ -37,7 +37,9 @@ async function startMockModel(routes) {
       const reply = await route.handle(context);
       if (!reply) continue;
       response.writeHead(reply.status ?? 200, { 'Content-Type': reply.type ?? 'application/json' });
-      response.end(typeof reply.body === 'string' ? reply.body : JSON.stringify(reply.body));
+      const body = reply.body;
+      // Strings and byte buffers are raw payloads; anything else becomes JSON.
+      response.end(typeof body === 'string' || body instanceof Uint8Array ? body : JSON.stringify(body));
       return;
     }
     response.writeHead(404); response.end('not found');
@@ -152,8 +154,8 @@ async function openSession() {
   // activeTab + a native optional-host prompt, which this headless test cannot exercise.
   manifest.host_permissions = ['http://127.0.0.1/*', 'https://api.deepseek.com/*', 'https://open.bigmodel.cn/*'];
   await fs.writeFile(path.join(extensionPath, 'manifest.json'), JSON.stringify(manifest));
-  const fixture = await fs.readFile(path.join(FIXTURES, 'technical-document.html'));
-  const jsonFixture = await fs.readFile(path.join(FIXTURES, 'json-output.html'));
+  const fixture = await fs.readFile(path.join(FIXTURES, 'technical-document.html'), 'utf8');
+  const jsonFixture = await fs.readFile(path.join(FIXTURES, 'json-output.html'), 'utf8');
 
   const record = { requests: [], analysisRequests: [], presetRequests: [], issues: [] };
   const gate = {
@@ -209,7 +211,8 @@ async function openSession() {
       return result;
     }
     async function restartExtension() {
-      const cdpSession = await cdp(options);
+      // Each restart uses its own CDP session: a detached session cannot be reused.
+      const cdpSession = await context.newCDPSession(options);
       let versions = [];
       cdpSession.on('ServiceWorker.workerVersionUpdated', event => { versions = event.versions; });
       await cdpSession.send('ServiceWorker.enable');

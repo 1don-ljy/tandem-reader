@@ -2,6 +2,8 @@ name: Browser smoke test
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
   schedule:
     # 每周一 03:00 UTC，用于发现 Playwright 或浏览器行为漂移
     - cron: '0 3 * * 1'
