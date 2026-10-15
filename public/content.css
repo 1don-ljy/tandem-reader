@@ -1,0 +1,64 @@
+html[data-docling-mode="translation"] [data-docling-source="true"]:not([data-docling-reveal="true"]) {
+  display: none !important;
+}
+
+html[data-docling-mode="source"] .docling-translation {
+  display: none !important;
+}
+
+.docling-translation {
+  display: block;
+  margin: 0.4em 0 1.2em;
+  padding: 0.7em 1em;
+  border-left: 3px solid #468a77;
+  border-radius: 0 6px 6px 0;
+  background: rgba(80, 140, 120, 0.08);
+  color: inherit;
+  font: inherit;
+  font-size: 0.95em;
+  line-height: 1.75;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  text-align: start;
+  list-style: none;
+}
+
+.docling-translation[data-docling-state="error"] {
+  border-left-color: #b65b39;
+  background: rgba(182, 91, 57, 0.08);
+}
+
+.docling-translation[data-docling-state="stale"] {
+  border-left-color: #b88832;
+}
+
+.docling-translation button {
+  appearance: none;
+  display: inline-block;
+  margin: 0.4em 0.6em 0 0;
+  padding: 0.2em 0.55em;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  font-size: 12px;
+  line-height: 1.6;
+  cursor: pointer;
+}
+
+.docling-translation button:focus-visible {
+  outline: 2px solid #468a77;
+  outline-offset: 2px;
+}
+
+.docling-translation [data-docling-note] {
+  display: block;
+  margin-top: 0.4em;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+[data-docling-wrapper="true"] {
+  display: contents;
+}

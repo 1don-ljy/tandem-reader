@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tandem Reader</title>
+  <link rel="stylesheet" href="ui.css">
+  <script type="module" src="popup.js"></script>
+</head>
+<body class="popup-page">
+  <header class="popup-header">
+    <div class="brand-mark" aria-hidden="true">译</div>
+    <div><h1>Tandem Reader</h1><p>让术语留在熟悉的语境里</p></div>
+    <button id="open-options" class="icon-button" title="打开设置" aria-label="打开设置">⚙</button>
+  </header>
+  <main>
+    <section class="popup-section">
+      <div class="section-heading"><h2>阅读方式</h2><span class="small-label">随时切换</span></div>
+      <div class="mode-picker" role="group" aria-label="阅读方式">
+        <button data-mode="source" aria-pressed="false">原文</button>
+        <button data-mode="dual" aria-pressed="true">双语</button>
+        <button data-mode="translation" aria-pressed="false">译文</button>
+      </div>
+    </section>
+    <form id="reading-settings">
+      <section class="popup-section">
+        <label for="profile">翻译模型</label>
+        <select id="profile" required><option value="">正在读取配置…</option></select>
+        <p id="profile-hint" class="field-hint">使用你配置的模型服务。</p>
+      </section>
+      <section class="popup-section context-section">
+        <div class="section-heading"><h2>领域上下文</h2><span class="small-label">翻译前可调整</span></div>
+        <label class="checkbox-line" for="auto-discover"><input id="auto-discover" type="checkbox" checked>自动识别领域与术语</label>
+        <p class="field-hint">点击开始后，用模型分析尚未记住的文档。后续章节会补充这套文档的领域记忆。</p>
+        <p id="context-source" class="field-hint">正在读取领域记忆来源…</p>
+        <label for="domain">当前领域</label>
+        <input id="domain" list="domains" placeholder="例如：AI Agent / .NET" maxlength="100">
+        <datalist id="domains"><option value="AI Agent / .NET"><option value="软件工程"><option value="人工智能"><option value="数据科学"></datalist>
+        <label for="context">给模型的阅读提示 <span class="optional">选填</span></label>
+        <textarea id="context" rows="3" maxlength="3000" placeholder="例如：这是一篇 .NET Agent 框架文档，agent 指能调用工具的 AI 智能体。"></textarea>
+        <p class="field-hint">你保存的术语规则会与这些提示一起生效。</p>
+        <label class="checkbox-line" for="remember-context"><input id="remember-context" type="checkbox" checked disabled>记住我的修改到这套文档</label>
+        <p id="memory-hint" class="field-hint">修改领域或提示后，可在开始翻译时保存为人工记忆。</p>
+      </section>
+      <div class="popup-actions">
+        <button id="start" class="primary-button" type="submit">翻译当前页面</button>
+        <button id="stop" class="secondary-button" type="button" disabled>停止</button>
+      </div>
+    </form>
+    <div id="status" class="status-message" role="status" aria-live="polite"></div>
+    <div id="progress-region" hidden><progress id="progress" value="0" max="1" aria-label="页面翻译进度"></progress><p id="progress-label" class="field-hint"></p></div>
+    <footer class="popup-footer">选中网页里的术语，即可保留英文或指定译法。<br>翻译时，页面文本将发送给你配置的模型服务。</footer>
+  </main>
+</body>
+</html>

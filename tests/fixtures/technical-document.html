@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Observability and Testing · Agent Documentation</title>
+  <style>
+    body { margin: 0; background: #f7f8fa; color: #263245; font: 17px/1.75 system-ui, sans-serif; }
+    header { padding: 22px 40px; border-bottom: 1px solid #dce1e9; background: white; }
+    main { max-width: 820px; margin: 40px auto; padding: 36px 50px; background: white; }
+    code, pre { background: #edf1f7; border-radius: 5px; }
+    code { padding: 2px 5px; }
+    pre { padding: 20px; overflow: auto; }
+    th, td { text-align: left; padding: 10px; border: 1px solid #dce1e9; }
+    table { width: 100%; border-collapse: collapse; }
+  </style>
+</head>
+<body>
+  <header>Agent Documentation</header>
+  <main>
+    <article>
+      <h1>Observability and Testing</h1>
+      <p id="paragraph-agent">An agent can call tools and continue a session. Observability helps explain why the agent selected a tool.</p>
+      <p id="paragraph-code">Use <code>ActivitySource</code> to create a trace, and read the <a href="https://example.com/docs/tracing">tracing documentation</a> before enabling production telemetry.</p>
+      <h2>Testing a session</h2>
+      <ul>
+        <li>Keep agent instructions clear and test tool failures.</li>
+        <li>A session may contain multiple requests and responses.</li>
+      </ul>
+      <pre id="sample-code"><code>var agent = new Agent();
+await agent.RunAsync("hello");</code></pre>
+      <table>
+        <thead><tr><th>Signal</th><th>Purpose</th></tr></thead>
+        <tbody><tr><td>Trace</td><td>Explain the path of an agent request.</td></tr></tbody>
+      </table>
+      <p id="paragraph-skip">This paragraph is intentionally useful for testing the skip-paragraph action.</p>
+      <p translate="no" id="untranslatable">Do not translate this application-managed paragraph.</p>
+      <textarea aria-label="User input">Never translate text entered here.</textarea>
+    </article>
+  </main>
+</body>
+</html>

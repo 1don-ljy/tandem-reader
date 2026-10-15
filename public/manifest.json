@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "Tandem Reader",
+  "version": "__VERSION__",
+  "description": "自动识别领域与术语、积累文档记忆的技术文档双语翻译。自备模型接口与 API Key。",
+  "minimum_chrome_version": "120",
+  "permissions": ["activeTab", "scripting", "storage"],
+  "optional_host_permissions": ["https://*/*", "http://localhost/*", "http://127.0.0.1/*"],
+  "background": { "service_worker": "background.js", "type": "module" },
+  "action": { "default_title": "Tandem Reader", "default_popup": "popup.html" },
+  "options_page": "options.html",
+  "incognito": "not_allowed",
+  "content_security_policy": { "extension_pages": "script-src 'self'; object-src 'none'" }
+}

@@ -1,0 +1,7 @@
+node_modules/
+.pi/
+tests/artifacts/
+dist/
+extension/
+.test-build/
+*.log

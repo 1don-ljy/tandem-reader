@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tandem Reader · 设置</title>
+  <link rel="stylesheet" href="ui.css">
+  <script type="module" src="options.js"></script>
+</head>
+<body class="settings-page">
+  <header class="settings-header"><a class="brand-link" href="#models"><span class="brand-mark" aria-hidden="true">译</span><span>Tandem Reader <small>阅读偏好</small></span></a><nav aria-label="设置导航"><a href="#models">模型服务</a><a href="#terms">术语规则</a><a href="#data">数据管理</a><a href="#memory">领域记忆</a><a href="#diagnostics">诊断</a></nav></header>
+  <main class="settings-main">
+    <div class="page-intro"><span class="eyebrow">YOUR WORDS, YOUR CONTEXT</span><h1>按你的方式，读懂技术文档。</h1><p>连接自己的模型，记住熟悉的术语。每次调整，都会成为下次阅读的起点。</p></div>
+    <div id="notice" class="status-message settings-notice" role="status" aria-live="polite"></div>
+    <section id="models" class="settings-section">
+      <div class="section-title"><div><span class="eyebrow">01 / CONNECTION</span><h2>模型服务</h2><p>直接选择 DeepSeek、智谱 GLM，或配置自己的 OpenAI-compatible Chat Completions 接口。</p></div><button id="new-profile" class="secondary-button">添加配置</button></div>
+      <div class="model-layout"><div id="profiles" class="profile-list" aria-label="已保存的模型配置"></div>
+        <form id="profile-form" class="panel">
+          <h3 id="profile-form-title">添加模型配置</h3>
+          <input id="profile-id" type="hidden">
+          <label for="profile-provider">模型服务商</label><select id="profile-provider"><option value="custom" selected>自定义兼容接口</option><option value="deepseek">DeepSeek 官方</option><option value="glm">智谱 GLM 官方</option></select>
+          <label for="profile-name">配置名称</label><input id="profile-name" required maxlength="80" placeholder="例如：我的开发模型">
+          <label for="profile-base-url">Base URL</label><input id="profile-base-url" type="url" required placeholder="https://api.example.com/v1" spellcheck="false" autocomplete="url">
+          <p id="profile-endpoint-hint" class="field-hint">填写接口根地址，插件会连接其 /chat/completions 接口。允许 HTTPS，或本机 HTTP 服务。</p>
+          <label for="profile-model">模型 ID</label><input id="profile-model" list="provider-models" required maxlength="200" placeholder="服务商提供的模型名称" spellcheck="false"><datalist id="provider-models"></datalist>
+          <p class="field-hint"><span id="profile-model-hint">按服务商文档填写模型 ID。</span> <a id="provider-docs" target="_blank" rel="noopener noreferrer" hidden>查看官方文档 ↗</a></p>
+          <label for="profile-key">API Key <span id="key-state" class="optional"></span></label><input id="profile-key" type="password" maxlength="8192" autocomplete="new-password" placeholder="粘贴你的 API Key" spellcheck="false">
+          <p id="profile-key-hint" class="field-hint">编辑已有配置时，留空会保留原 Key。Key 不会显示在此页面。</p>
+          <label for="key-persistence">Key 保存方式</label><select id="key-persistence"><option value="session">仅本次浏览器会话</option><option value="local">记住在本机</option></select>
+          <p id="key-storage-hint" class="field-hint">浏览器关闭或扩展重载后，需要重新填写。</p>
+          <div class="form-actions"><button class="primary-button" type="submit" id="save-profile">保存配置</button><button type="button" id="test-profile" class="secondary-button" disabled>测试已保存的配置</button></div>
+          <p id="connection-result" class="field-hint" role="status" aria-live="polite">保存配置不会自动发起模型请求。</p>
+        </form>
+      </div>
+      <aside class="privacy-note"><strong>你的 Key 与文档内容</strong><p>Key 只存于本次会话或本机，不参与同步或配置导出。本机存储不等于加密保险箱。测试连接会向服务发送一条简短请求；翻译时会发送所选页面文本、领域上下文和适用术语。</p></aside>
+    </section>
+    <section id="terms" class="settings-section">
+      <div class="section-title"><div><span class="eyebrow">02 / VOCABULARY</span><h2>术语规则</h2><p>用户规则优先于模型判断。越具体的范围，优先级越高。</p></div><button id="new-rule" class="secondary-button">添加术语</button></div>
+      <div class="terms-layout"><div class="panel"><label for="rule-search">查找规则</label><input id="rule-search" type="search" placeholder="搜索术语、译法或范围"><div id="rules" class="rules-list"></div></div>
+        <form id="rule-form" class="panel">
+          <h3 id="rule-form-title">添加术语规则</h3><input id="rule-id" type="hidden">
+          <label for="rule-term">原文术语</label><input id="rule-term" required maxlength="160" placeholder="例如：agent">
+          <label for="rule-action">处理方式</label><select id="rule-action"><option value="keep">保留原文</option><option value="translate">指定译法</option><option value="first">首次中英对照</option></select>
+          <div id="translation-field" hidden><label for="rule-translation">中文译法</label><input id="rule-translation" maxlength="160" placeholder="例如：智能体"><p class="field-hint">首次中英对照会显示“智能体（agent）”；后续保留原文术语。</p></div>
+          <label for="rule-scope">应用范围</label><select id="rule-scope"><option value="collection">这套文档</option><option value="page">当前页面</option><option value="domain">某个领域</option><option value="global">所有文档</option></select>
+          <div id="scope-url-field"><label for="rule-scope-value" id="scope-url-label">文档网址前缀</label><input id="rule-scope-value" type="url" placeholder="https://example.com/docs/" spellcheck="false"><p id="scope-hint" class="field-hint">仅对这一网址路径下的文档生效，请保留结尾的 /。</p></div>
+          <div id="scope-domain-field" hidden><label for="rule-domain">领域名称</label><input id="rule-domain" maxlength="100" placeholder="例如：AI Agent / .NET"><p class="field-hint">与阅读面板设置的领域名称一致时生效。</p></div>
+          <div class="form-actions"><button id="save-rule" class="primary-button" type="submit">保存规则</button><button id="cancel-rule" class="text-button" type="button">清空</button></div>
+          <p class="field-hint">新规则用于后续翻译；已打开的页面可以更新受影响的译文。</p>
+        </form>
+      </div>
+      <details class="panel skip-panel"><summary>不翻译的段落 <span id="skip-count" class="count-badge">0</span></summary><p class="field-hint">在原页面取消标记，或在这里删除记录。删除后可重新翻译该段。</p><div id="skips" class="rules-list"></div></details>
+    </section>
+    <section id="data" class="settings-section">
+      <div class="section-title"><div><span class="eyebrow">03 / YOUR DATA</span><h2>数据管理</h2><p>导出术语、偏好与人工领域记忆，或从已保存的配置文件恢复。文件不包含 API Key、自动领域分析和近期段落会话。</p></div></div>
+      <div class="panel data-panel"><div><h3>配置备份</h3><p class="field-hint">导入后请检查模型配置，并按需重新填写 Key。建议导入前先导出当前配置。</p></div><div class="form-actions"><button id="export-config" class="secondary-button">导出配置</button><button id="import-config" class="secondary-button">导入配置</button><input id="import-file" type="file" accept="application/json,.json" hidden></div></div>
+    </section>
+    <section id="memory" class="settings-section">
+      <div class="section-title"><div><span class="eyebrow">04 / DOCUMENT MEMORY</span><h2>领域记忆</h2><p>自动识别领域并积累术语；你确认的领域上下文和人工术语规则优先生效。</p></div><button id="new-memory" class="secondary-button">添加人工记忆</button></div>
+      <div class="panel auto-memory-panel"><h3>自动识别的领域 <span id="domain-memory-count" class="count-badge">0</span></h3><p class="field-hint">点击开始翻译后，会先用模型分析未记住的文档；后续章节会补充这套文档的记忆。以下是模型的判断，可查看依据并纠正为人工规则。</p><div id="domain-memories" class="rules-list"></div></div>
+      <div class="terms-layout"><div class="panel"><h3>人工确认的文档上下文</h3><div id="memories" class="rules-list"></div></div>
+        <form id="memory-form" class="panel">
+          <h3 id="memory-form-title">添加人工领域记忆</h3><input id="memory-id" type="hidden">
+          <label for="memory-scope">适用范围</label><select id="memory-scope"><option value="collection">这套文档</option><option value="page">当前页面</option></select>
+          <label id="memory-scope-label" for="memory-scope-value">文档网址前缀</label><input id="memory-scope-value" type="url" required placeholder="https://example.com/docs/" spellcheck="false"><p id="memory-scope-hint" class="field-hint">在此网址路径下的页面载入；更具体的文档路径优先。</p>
+          <label for="memory-domain">领域名称</label><input id="memory-domain" required maxlength="100" placeholder="例如：AI Agent / .NET">
+          <label for="memory-context">阅读提示 <span class="optional">选填</span></label><textarea id="memory-context" rows="4" maxlength="3000" placeholder="例如：agent 指可以调用工具的 AI 智能体，不是网络代理。"></textarea>
+          <p class="field-hint">这里只保存你确认的领域上下文，不保存 API Key；匹配文档时会将这些提示提供给翻译模型。</p>
+          <div class="form-actions"><button id="save-memory" class="primary-button" type="submit">保存记忆</button><button id="cancel-memory" class="text-button" type="button">清空</button></div>
+        </form>
+      </div>
+      <details class="panel skip-panel"><summary>近期文档会话 <span id="session-count" class="count-badge">0</span></summary><p class="field-hint">近期段落与译文保存在本机，用于结合前后文翻译。这些内容不会进入配置导出；清除后，领域记忆与术语规则仍会保留。</p><div id="sessions" class="rules-list"></div><div class="form-actions"><button id="clear-sessions" class="secondary-button" disabled>清除所有近期会话</button></div></details>
+    </section>
+    <section id="diagnostics" class="settings-section">
+      <div class="section-title"><div><span class="eyebrow">05 / DIAGNOSTICS</span><h2>诊断</h2><p>最近的模型请求与失败记录，用于排查问题。记录只包含时间、请求类型、任务标识、耗时和错误分类，不包含页面文本、译文或 API Key。</p></div><div class="form-actions"><button id="load-diagnostics" class="secondary-button">查看诊断</button><button id="export-diagnostics" class="secondary-button">导出 JSON</button></div></div>
+      <details class="panel skip-panel"><summary>最近事件 <span id="diagnostic-count" class="count-badge">0</span></summary><p class="field-hint">最多保留 200 条，浏览器或扩展重载后会清空。导出内容可直接附在问题反馈中。</p><div id="diagnostics-events" class="rules-list"></div></details>
+    </section>
+    <footer class="settings-footer">Tandem Reader · 为技术阅读保留上下文</footer>
+  </main>
+</body>
+</html>
