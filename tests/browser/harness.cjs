@@ -167,7 +167,7 @@ async function openSession() {
   let context;
   try {
     context = await playwright.chromium.launchPersistentContext(path.join(scratch, 'profile'), {
-      channel: 'chromium', headless: true, viewport: { width: 1440, height: 1100 },
+      channel: 'chromium', headless: process.env.PW_HEADED !== '1', viewport: { width: 1440, height: 1100 },
       args: [`--disable-extensions-except=${extensionPath}`, `--load-extension=${extensionPath}`, '--no-proxy-server', '--host-resolver-rules=MAP api.deepseek.com ~NOTFOUND, MAP open.bigmodel.cn ~NOTFOUND']
     });
     // DNS is also blocked for these domains: an interception failure must never

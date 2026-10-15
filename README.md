@@ -158,7 +158,7 @@ npm run package
 | `src/memory` | 可注入存储的文档记忆与会话仓库。 |
 | `src/shared` | 消息类型、服务商预设、术语匹配、占位符与配置校验。 |
 | `src/background`、`src/content`、`src/ui` | 扩展后台、网页阅读交互与配置界面。 |
-| `public` | Manifest、HTML 与 CSS 静态资源。 |
+| `public` | Manifest、扩展图标、HTML 与 CSS 静态资源（`manifest.json` 的版本号是 `__VERSION__` 占位符，构建时注入）。 |
 | `extension` | 构建生成的可加载扩展，不作为业务源码编辑。 |
 | `tests` | Node 单元测试（直接运行 `src/**`）、`tests/browser` 隔离浏览器测试、fixtures 与截图产物。 |
 | `scripts` | `build.mjs`（生产 / `--watch` 构建与版本注入）、`package.mjs`（打包预检与 ZIP）。 |
@@ -197,7 +197,9 @@ git push origin main --tags
 # 再在 GitHub 网页上 New release → 选择 v0.5.0 → 上传 dist/tandem-reader-0.5.0.zip → 填写更新说明（可用 CHANGELOG.md 的 0.5.0 一节）
 ```
 
-提交浏览器扩展商店前还需要：图标（当前 manifest 未声明 `icons`）、商店文案与截图、隐私政策页。当前仓库以本地开发版本发布，尚未提交商店。
+扩展已带图标（`public/icon-{16,32,48,128}.png`，几何占位设计，可按品牌替换）。提交浏览器扩展商店前还需要：商店文案与截图、隐私政策页；当前仓库以本地开发版本发布，尚未提交商店。
+
+仓库自带两个 GitHub Actions：`.github/workflows/ci.yml` 在 push / PR 时执行类型检查、单元测试与生产构建；`.github/workflows/browser.yml` 可手动（Actions → Run workflow）或每周自动运行浏览器冒烟测试，会自动安装 Playwright、构建扩展并上传 `tests/artifacts` 截图。
 
 各版本变更见 [CHANGELOG.md](CHANGELOG.md)。
 

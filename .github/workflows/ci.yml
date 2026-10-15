@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - name: Check manifest version matches package.json
+        run: |
+          node -e "const pkg=require('./package.json');const manifest=require('./extension/manifest.json');if(manifest.version!==pkg.version){console.error('manifest '+manifest.version+' != package.json '+pkg.version);process.exit(1);}console.log('manifest version '+manifest.version+' matches package.json');"

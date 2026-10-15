@@ -4,10 +4,11 @@
   "version": "__VERSION__",
   "description": "自动识别领域与术语、积累文档记忆的技术文档双语翻译。自备模型接口与 API Key。",
   "minimum_chrome_version": "120",
+  "icons": { "16": "icon-16.png", "32": "icon-32.png", "48": "icon-48.png", "128": "icon-128.png" },
   "permissions": ["activeTab", "scripting", "storage"],
   "optional_host_permissions": ["https://*/*", "http://localhost/*", "http://127.0.0.1/*"],
   "background": { "service_worker": "background.js", "type": "module" },
-  "action": { "default_title": "Tandem Reader", "default_popup": "popup.html" },
+  "action": { "default_title": "Tandem Reader", "default_popup": "popup.html", "default_icon": { "16": "icon-16.png", "32": "icon-32.png" } },
   "options_page": "options.html",
   "incognito": "not_allowed",
   "content_security_policy": { "extension_pages": "script-src 'self'; object-src 'none'" }

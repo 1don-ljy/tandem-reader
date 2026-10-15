@@ -1,0 +1,35 @@
+name: Browser smoke test
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 每周一 03:00 UTC，用于发现 Playwright 或浏览器行为漂移
+    - cron: '0 3 * * 1'
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Install Playwright (optional test dependency, not part of the project)
+        run: |
+          npm install --no-save --no-package-lock playwright
+          npx playwright install --with-deps chromium
+      # 若扩展在无头模式下无法加载，可改为有头 + 虚拟显示：
+      #   sudo apt-get install -y xvfb
+      #   xvfb-run -a env PW_HEADED=1 npm run test:browser
+      - name: Run browser scenarios
+        run: npm run test:browser
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-screenshots
+          path: tests/artifacts
+          if-no-files-found: ignore
